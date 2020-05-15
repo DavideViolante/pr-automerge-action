@@ -1,0 +1,17 @@
+name: 'Pull request automerge action'
+description: 'GitHub Action to automatically merge pull requests when some conditions are met'
+branding:
+  icon: 'git-merge'
+  color: 'purple'
+inputs:
+  merge-method:
+    description: 'Pull request merge method. One between merge, squash, rebase'
+    required: false
+    default: 'squash'
+  min-approvals:
+    description: 'Minimum numbers of approvals to merge the pull request'
+    required: false
+    default: 2
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
