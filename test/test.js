@@ -57,9 +57,9 @@ describe('Pull Request Reviews Reminder Action tests', () => {
   
   it('Should create the mapping {"PR":approvals,...}', () => {
     const mapping = createMapping(mockPullRequests);
-    assert.equal(mapping['123'], 2);
-    assert.equal(mapping['456'], 1);
-    assert.equal(mapping['789'], undefined);
+    assert.strictEqual(mapping['123'], 2);
+    assert.strictEqual(mapping['456'], 1);
+    assert.strictEqual(mapping['789'], undefined);
   });
 
   it('Should not create the mapping {"PR":approvals,...}', () => {
