@@ -33,6 +33,7 @@ jobs:
       with:
         merge-method: 'squash' # Default 'squash'
         min-approvals: 2 # Default 2
+        base-ref: 'dev' # Default 'dev'
 ```
 
 ## Bug or feedback?

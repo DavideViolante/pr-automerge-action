@@ -12,6 +12,10 @@ inputs:
     description: 'Minimum numbers of approvals to merge the pull request'
     required: false
     default: 2
+  base-ref:
+    description: 'Base ref branch to filter pull requests'
+    required: false
+    default: 'dev'
 runs:
   using: 'node12'
   main: 'dist/index.js'

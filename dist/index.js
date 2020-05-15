@@ -900,6 +900,7 @@ const AUTH_HEADER = {
   Authorization: `token ${GITHUB_TOKEN}`
 };
 const GITHUB_ENDPOINT = `${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}`;
+const WAIT_MS = 5000;
 
 function getPullRequests() {
   return axios({
@@ -928,12 +929,26 @@ function mergePullRequest(number, merge_method) {
   });
 }
 
-function deleteRefBranch(branch) {
+function deleteHeadRef(ref) {
   return axios({
     method: 'DELETE',
-    url: `${GITHUB_ENDPOINT}/git/refs/heads/${branch}`,
+    url: `${GITHUB_ENDPOINT}/git/refs/heads/${ref}`,
     headers: AUTH_HEADER
   });
+}
+
+function filterByBaseRef(pullRequests, ref) {
+  return pullRequests.filter(pr => pr.base.ref === ref);
+}
+
+function getPromisesAndRefs(pullRequests) {
+  const promises = [];
+  const refs = {};
+  for (const pr of pullRequests) {
+    promises.push(getPullRequestReviews(pr.number));
+    refs[pr.number] = pr.head.ref;
+  }
+  return { promises, refs };
 }
 
 function sleep(ms) {
@@ -944,27 +959,22 @@ async function main() {
   try {
     const merge_method = core.getInput('merge-method');
     const minApprovals = core.getInput('min-approvals');
-    const waitMs = 5000;
+    const baseRef = core.getInput('base-ref');
     core.info('Getting open pull requests...');
-    const pullRequests = await getPullRequests();
-    core.info(`There are ${pullRequests.data.length} open pull requests`);
-    core.info(`Getting reviews for ${pullRequests.data.length} pull requests`);
-    let promises = [];
-    const refs = {};
-    for (const pr of pullRequests.data) {
-      refs[pr.number] = pr.head.ref;
-      promises.push(getPullRequestReviews(pr.number));
-    }
+    let pullRequests = await getPullRequests();
+    pullRequests = filterByBaseRef(pullRequests.data, baseRef);
+    core.info(`There are ${pullRequests.length} open PRs with "${baseRef}" base ref`);
+    core.info(`Getting their reviews...`);
+    const { promises, refs } = getPromisesAndRefs(pullRequests);
     const pullRequestsReviewsResolved = await Promise.all(promises);
     const pullRequestsReviews = createMapping(pullRequestsReviewsResolved);
-    core.info(`{"PR":approvals,...} -> ${JSON.stringify(pullRequestsReviews)}`);
     for (const [prNumber, approvals] of Object.entries(pullRequestsReviews)) {
       if (approvals >= +minApprovals) {
         core.info(`Automerging PR #${prNumber} (${minApprovals} approvals)`);
         await mergePullRequest(prNumber, merge_method);
-        core.info(`Waiting ${waitMs / 1000}s before next merge...`);
-        await sleep(waitMs);
-        await deleteRefBranch(refs[prNumber]);
+        core.info(`Waiting ${WAIT_MS / 1000}s before next merge...`);
+        await sleep(WAIT_MS);
+        await deleteHeadRef(refs[prNumber]);
       } else {
         core.info(`Skipping PR #${prNumber} (${approvals} approvals)`);
       }
