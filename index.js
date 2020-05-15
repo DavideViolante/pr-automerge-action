@@ -10,6 +10,7 @@ const AUTH_HEADER = {
   Authorization: `token ${GITHUB_TOKEN}`
 };
 const GITHUB_ENDPOINT = `${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}`;
+const WAIT_MS = 5000;
 
 function getPullRequests() {
   return axios({
@@ -46,6 +47,16 @@ function deleteRefBranch(branch) {
   });
 }
 
+function getPromisesAndRefs(pullRequests) {
+  const promises = [];
+  const refs = {};
+  for (const pr of pullRequests.data) {
+    promises.push(getPullRequestReviews(pr.number));
+    refs[pr.number] = pr.head.ref;
+  }
+  return { promises, refs };
+}
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -54,17 +65,11 @@ async function main() {
   try {
     const merge_method = core.getInput('merge-method');
     const minApprovals = core.getInput('min-approvals');
-    const waitMs = 5000;
     core.info('Getting open pull requests...');
     const pullRequests = await getPullRequests();
     core.info(`There are ${pullRequests.data.length} open pull requests`);
     core.info(`Getting reviews for ${pullRequests.data.length} pull requests`);
-    let promises = [];
-    const refs = {};
-    for (const pr of pullRequests.data) {
-      refs[pr.number] = pr.head.ref;
-      promises.push(getPullRequestReviews(pr.number));
-    }
+    const { promises, refs } = getPromisesAndRefs(pullRequests.data);
     const pullRequestsReviewsResolved = await Promise.all(promises);
     const pullRequestsReviews = createMapping(pullRequestsReviewsResolved);
     core.info(`{"PR":approvals,...} -> ${JSON.stringify(pullRequestsReviews)}`);
@@ -72,8 +77,8 @@ async function main() {
       if (approvals >= +minApprovals) {
         core.info(`Automerging PR #${prNumber} (${minApprovals} approvals)`);
         await mergePullRequest(prNumber, merge_method);
-        core.info(`Waiting ${waitMs / 1000}s before next merge...`);
-        await sleep(waitMs);
+        core.info(`Waiting ${WAIT_MS / 1000}s before next merge...`);
+        await sleep(WAIT_MS);
         await deleteRefBranch(refs[prNumber]);
       } else {
         core.info(`Skipping PR #${prNumber} (${approvals} approvals)`);
