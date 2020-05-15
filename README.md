@@ -13,6 +13,10 @@ Pull request merge method: "merge", "squash", "rebase". Default is "squash".
 
 Minimum number of approvals needed on a pull request to be merged. Default is 2.
 
+### base-ref
+
+Base ref branch to filter pull requests. Default is "dev".
+
 ## Example usage
 
 ```yaml
