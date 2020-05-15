@@ -32,7 +32,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         merge-method: 'squash' # Default 'squash'
-        min-reviews: 2 # Default 2
+        min-approvals: 2 # Default 2
 ```
 
 ## Bug or feedback?
