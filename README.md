@@ -31,7 +31,7 @@ jobs:
   pr-automerge:
     runs-on: ubuntu-latest
     steps:
-    - uses: davideviolante/pr-automerge-action@v1.0.0
+    - uses: davideviolante/pr-automerge-action@v1.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
