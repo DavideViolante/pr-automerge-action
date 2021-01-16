@@ -1,6 +1,6 @@
 {
   "name": "pr-automerge-action",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "GitHub Action to automatically merge pull requests when some conditions are met",
   "scripts": {
     "build": "ncc build index.js",
