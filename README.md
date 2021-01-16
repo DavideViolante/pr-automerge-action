@@ -1,5 +1,5 @@
 # Pull Request auto merge action
-[![](https://github.com/davideviolante/pr-automerge-action/workflows/Node.js%20CI/badge.svg)](https://github.com/DavideViolante/pr-automerge-action/actions?query=workflow%3A%22Node.js+CI%22) [![Maintainability](https://api.codeclimate.com/v1/badges/60f9b3a6b4177a0bfe77/maintainability)](https://codeclimate.com/github/DavideViolante/pr-automerge-action/maintainability) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante)
+[![](https://github.com/davideviolante/pr-automerge-action/workflows/Node.js%20CI/badge.svg)](https://github.com/DavideViolante/pr-automerge-action/actions?query=workflow%3A%22Node.js+CI%22) [![Coverage Status](https://coveralls.io/repos/github/DavideViolante/pr-automerge-action/badge.svg?branch=master)](https://coveralls.io/github/DavideViolante/pr-automerge-action?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/60f9b3a6b4177a0bfe77/maintainability)](https://codeclimate.com/github/DavideViolante/pr-automerge-action/maintainability) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante)
 
 GitHub Action to automatically merge pull requests when some conditions are met.
 
