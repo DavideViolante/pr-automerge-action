@@ -1,6 +1,6 @@
 {
   "name": "pr-automerge-action",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "GitHub Action to automatically merge pull requests when some conditions are met",
   "scripts": {
     "build": "ncc build index.js",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.38.1",
-    "eslint": "^8.41.0",
+    "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.4.0",
     "nyc": "^15.1.0"
