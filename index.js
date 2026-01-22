@@ -67,13 +67,13 @@ function deleteHeadRef(ref) {
 }
 
 /**
- * Filter Pull Requests based on ref
+ * Filter Pull Requests based on ref and exclude draft PRs
  * @param {Array} pullRequests Array of Pull Requests
  * @param {String} ref GitHub ref
- * @return {Array} Array of Pull Requests filtered
+ * @return {Array} Array of Pull Requests filtered (non-draft)
  */
 function filterByBaseRef(pullRequests, ref) {
-  return pullRequests.filter((pr) => pr.base.ref === ref);
+  return pullRequests.filter((pr) => pr.base.ref === ref && !pr.draft);
 }
 
 /**
