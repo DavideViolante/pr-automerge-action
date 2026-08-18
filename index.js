@@ -13,9 +13,9 @@ const WAIT_MS = 5000;
 
 /**
  * Get Pull Requests
- * @return {Array} array of pull requests
+ * @return {Promise<Array>} array of pull requests
  */
-function getPullRequests() {
+async function getPullRequests() {
   return axios({
     method: 'GET',
     url: `${GITHUB_ENDPOINT}/pulls`,
@@ -26,9 +26,9 @@ function getPullRequests() {
 /**
  * Get Pull Request reviews from ID
  * @param {Number} number Pull Request ID
- * @return {Array} Array of reviews
+ * @return {Promise<Array>} Array of reviews
  */
-function getPullRequestReviews(number) {
+async function getPullRequestReviews(number) {
   return axios({
     method: 'GET',
     url: `${GITHUB_ENDPOINT}/pulls/${number}/reviews`,
@@ -40,9 +40,9 @@ function getPullRequestReviews(number) {
  * Merge a Pull Request
  * @param {Number} number Pull Request ID
  * @param {String} mergeMethod Merge method
- * @return {void}
+ * @return {Promise<void>}
  */
-function mergePullRequest(number, mergeMethod) {
+async function mergePullRequest(number, mergeMethod) {
   return axios({
     method: 'PUT',
     url: `${GITHUB_ENDPOINT}/pulls/${number}/merge`,
@@ -56,9 +56,9 @@ function mergePullRequest(number, mergeMethod) {
 /**
  * Delete a ref
  * @param {String} ref GitHub ref to delete
- * @return {void}
+ * @return {Promise<void>}
  */
-function deleteHeadRef(ref) {
+async function deleteHeadRef(ref) {
   return axios({
     method: 'DELETE',
     url: `${GITHUB_ENDPOINT}/git/refs/heads/${ref}`,
@@ -94,9 +94,9 @@ function getPromisesAndRefs(pullRequests) {
 /**
  * Wait ms
  * @param {Number} ms ms to wait
- * @return {void}
+ * @return {Promise<void>}
  */
-function sleep(ms) {
+async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
